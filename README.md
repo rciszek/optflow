@@ -5,9 +5,7 @@ This package provides python bindings to CUDA accelerated optical flow methods.
 ## Methods
 
 ### Brox Optical Flow
-Taken from OpenCV 3.X <sup>[1](#opencv)</sup>. OpenCV must be installed on the machine.
-
-*To do:* Write function to locate OpenCV on the machine without the use of `pkg-config`.
+Taken from OpenCV 4.X <sup>[1](#opencv)</sup>. OpenCV must be installed on the machine.
 
 	@inproceedings{brox2004high,
 	  title={High accuracy optical flow estimation based on a theory for warping},
@@ -32,9 +30,9 @@ Taken from OpenCV 3.X <sup>[1](#opencv)</sup>. OpenCV must be installed on the m
 ```
 git clone https://github.com/linchaobao/EPPM ~/EPPM
 ln -s ~/EPPM .
-python2 setup.py build_ext -i
-python2 demo.py
+python3 setup.py build_ext -i
+python3 demo.py
 ```
 
 
-<a name="opencv">1</a>: https://docs.opencv.org/3.4.1/d7/d18/classcv_1_1cuda_1_1BroxOpticalFlow.html
+<a name="opencv">1</a>: https://docs.opencv.org/4.4.0/d7/d18/classcv_1_1cuda_1_1BroxOpticalFlow.html
