@@ -32,6 +32,7 @@ def find_path(file_regexp):
 
 
 def list_opencv_libs(lib_path):
+
     # Construct a valid list of opencv libs
     with subprocess.Popen(
         ("find", lib_path), stdout=subprocess.PIPE, stderr=subprocess.DEVNULL
@@ -141,7 +142,11 @@ class custom_build_ext(build_ext):
 
 # Find opencv include dir, opencv lib path, and list opencv libs
 opencv_incs = [find_path("opencv2/core/core.hpp")]
-opencv_libs_path = find_path("libopencv_core.so")
+if "OPENCV_LIBS" in os.environ:
+    opencv_libs_path = os.environ["OPENCV_LIBS"]
+else:
+    opencv_libs_path = find_path("libopencv_core.so")
+
 opencv_libs = list_opencv_libs(opencv_libs_path)
 
 
