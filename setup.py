@@ -54,7 +54,8 @@ def locate_cuda():
     if "CUDAHOME" in os.environ:
         home = os.environ["CUDAHOME"]
         nvcc = os.path.join(home, "bin", "nvcc")
-        cuda_incs = home + "/include"
+        cuda_incs = os.path.join(home,"include")
+        cuda_libs = os.path.join(home,"lib64")
 
         if not os.path.exists(nvcc):
             raise EnvironmentError(
@@ -72,8 +73,9 @@ def locate_cuda():
         home = os.path.abspath(os.path.dirname(nvcc) + "/..")
 
         cuda_incs = find_path("cuda.h")
+        cuda_libs = find_path("libcudart.so")
 
-    cudaconfig = {"home": home, "nvcc": nvcc, "include": cuda_incs}
+    cudaconfig = {"home": home, "nvcc": nvcc, "include": cuda_incs, "lib":cuda_libs}
 
     return cudaconfig
 
@@ -86,7 +88,7 @@ def check_gcc():
     else:
         try:
             # If CC is not set, use system gcc.
-            return subprocess.check_output("which gcc".split()).decode()
+            return subprocess.check_output("which gcc".split()).decode().strip()
         except subprocess.CalledProcessError:
             raise EnvironmentError("The gcc path could not be located.")
 
@@ -149,6 +151,10 @@ else:
 
 opencv_libs = list_opencv_libs(opencv_libs_path)
 
+if "GPU_ARCH" in os.environ:
+    gpu_arch = os.environ["GPU_ARCH"]
+else:
+    gpu_arch = 52
 
 eppm_src = [
     "EPPM/bao_pmflow_census_kernel.cu",
@@ -170,7 +176,8 @@ extensions = [
         extra_compile_args={
             "gcc": ["-g"],
             "nvcc": [
-                "-arch=sm_30",
+                "-arch=sm_{}".format(gpu_arch),
+                "-gencode=arch=compute_{},code=sm_{}".format(gpu_arch,gpu_arch),
                 "--ptxas-options=-v",
                 "-c",
                 "--compiler-options",
