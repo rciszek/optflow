@@ -172,7 +172,7 @@ extensions = [
         include_dirs=[numpy.get_include(), cuda["include"], "EPPM", "EPPM/basic"]
         + opencv_incs,
         language="c++",
-        extra_link_args=["-L", opencv_libs_path] + opencv_libs + ["-lcudart", "-g"],
+        extra_link_args=["-L", opencv_libs_path] + opencv_libs + [ "-L" + cuda["lib"] +"-lcudart", "-g"],
         extra_compile_args={
             "gcc": ["-g"],
             "nvcc": [
