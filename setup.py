@@ -54,8 +54,8 @@ def locate_cuda():
     if "CUDAHOME" in os.environ:
         home = os.environ["CUDAHOME"]
         nvcc = os.path.join(home, "bin", "nvcc")
-        cuda_incs = os.path.join(home,"include")
-        cuda_libs = os.path.join(home,"lib64")
+        cuda_incs = os.path.join(home, "include")
+        cuda_libs = os.path.join(home, "lib64")
 
         if not os.path.exists(nvcc):
             raise EnvironmentError(
@@ -75,7 +75,7 @@ def locate_cuda():
         cuda_incs = os.path.abspath(find_path("cuda.h"))
         cuda_libs = os.path.abspath(find_path("libcudart.so"))
 
-    cudaconfig = {"home": home, "nvcc": nvcc, "include": cuda_incs, "lib":cuda_libs}
+    cudaconfig = {"home": home, "nvcc": nvcc, "include": cuda_incs, "lib": cuda_libs}
 
     return cudaconfig
 
@@ -172,12 +172,14 @@ extensions = [
         include_dirs=[numpy.get_include(), cuda["include"], "EPPM", "EPPM/basic"]
         + opencv_incs,
         language="c++",
-        extra_link_args=["-L", opencv_libs_path] + opencv_libs + [ "-L" + cuda["lib"] +"-lcudart", "-g"],
+        extra_link_args=["-L", opencv_libs_path]
+        + opencv_libs
+        + ["-L", cuda["lib"], "-lcudart", "-g"],
         extra_compile_args={
             "gcc": ["-g"],
             "nvcc": [
                 "-arch=sm_{}".format(gpu_arch),
-                "-gencode=arch=compute_{},code=sm_{}".format(gpu_arch,gpu_arch),
+                "-gencode=arch=compute_{},code=sm_{}".format(gpu_arch, gpu_arch),
                 "--ptxas-options=-v",
                 "-c",
                 "--compiler-options",
