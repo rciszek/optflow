@@ -72,8 +72,8 @@ def locate_cuda():
 
         home = os.path.abspath(os.path.dirname(nvcc) + "/..")
 
-        cuda_incs = find_path("cuda.h")
-        cuda_libs = find_path("libcudart.so")
+        cuda_incs = os.path.abspath(find_path("cuda.h"))
+        cuda_libs = os.path.abspath(find_path("libcudart.so"))
 
     cudaconfig = {"home": home, "nvcc": nvcc, "include": cuda_incs, "lib":cuda_libs}
 
