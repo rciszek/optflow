@@ -5,8 +5,13 @@ cimport numpy as np  # Import numpy C/C++ API
 from libcpp cimport bool
 from cpython.ref cimport PyObject
 from libc.stdlib cimport malloc, free
-
 np.import_array()
+import ctypes
+
+_decref = ctypes.pythonapi.Py_DecRef
+_decref.argtypes = [ctypes.py_object]
+_decref.restype = None
+
 
 cdef extern from 'src/pyopencv_converter.cpp':
     #mrc689 April 20,2017
@@ -170,6 +175,7 @@ cpdef brox(np.ndarray[np.float64_t, ndim=2, mode="c"] im0_d, np.ndarray[np.float
         alpha, gamma, scale_factor, inner_iterations, outer_iterations, solver_iterations)
 
     brox.get().calc(g_im0, g_im1, g_flow)
-
     g_flow.download(flow)
-    return <object> pyopencv_from(flow)
+    flow_object = <object>pyopencv_from(flow)
+    _decref(flow_object)
+    return flow_object
